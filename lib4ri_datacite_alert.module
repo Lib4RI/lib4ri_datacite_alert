@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function lib4ri_datacite_alert_menu() {
+    $items = array();
+    
+    $items['admin/islandora/datacite'] = array(
+        'title' => 'Config',
+        'description' => 'General configuration',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('lib4ri_datacite_alert_form'),
+        'access arguments' => array('administer datacite'),
+        'file' => 'includes/forms.inc',
+    );
+    
+    $items['islandora/datacite/batch'] = array(
+        'page callback' => 'lib4ri_datacite_alert',
+        'access arguments' => array('administer datacite'),
+        'type' => MENU_CALLBACK,
+    );
+    
+    return $items;
+}
+
+
+/**
+ * Implements hook_permission().
+ */
+function lib4ri_datacite_alert_permission() {
+    return array(
+        'administer datacite' => array(
+            'title' => t('Administer Datacite data'),
+        ),
+    );
+}
+
+
+function lib4ri_datacite_alert_batch($params = NULL){
+//    module_load_include('inc', 'lib4ri_datacite_alert', 'includes/queries');
+    $batch = array(
+        'operations' => array(
+            //            array('publication_DB_scopus_alert', array()),
+        ),
+        'finished' => 'lib4ri_datacite_batch_finished',
+        'title' => t('Fetching Datacite info'),
+        'init_message' => t('Starting...'),
+        'progress_message' => t('Processed @current out of @total.'),
+        'error_message' => t('Example Batch has encountered an error.'),
+        'file' => drupal_get_path('module', 'protein_db') . '/protein_db.module',
+    );
+    
+    array_push($batch['operations'], array('lib4ri_datacite_alert_fetch', array()));
+}
+
+
+function lib4ri_datacite_alert_fetch(&$context){
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['current_node'] = 0;
+        $context['sandbox']['max'] = 1;
+    }
+    
+    module_load_include('inc', 'lib4ri_datacite_alert', 'includes/classes');
+    $upd = new DataCiteRetrieval();
+    $upd->update();
+    
+    $context['sandbox']['current_node']++;
+    $context['sandbox']['progress']++;    
+}
+
+
+

@@ -1,0 +1,62 @@
+<?php
+
+/**
+* Implements hook_schema().
+*/
+function lib4ri_datacite_alert_schema() {
+    $schema['lib4ri_datacite_alert_data'] = array(
+        'description' => '-',
+        'fields' => array(
+            'id' => array(
+                'description' => 'key',
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE
+            ),
+            'pid' => array(
+                'type' => 'varchar',
+                'length' => 20,
+                'default' => '',
+            ),
+            'doi' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'datadoi' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'link' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'publisher' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'relation' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'status' => array(
+                'type' => 'varchar',
+                'length' => 11,
+                'default' => '',
+                'not null' => TRUE
+            ),    
+            'remarks' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+                'not null' => TRUE
+            ),
+        ),
+    );
+       
+    return $schema;
+}
