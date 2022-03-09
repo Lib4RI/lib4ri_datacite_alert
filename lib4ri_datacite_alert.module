@@ -7,18 +7,26 @@ function lib4ri_datacite_alert_menu() {
     $items = array();
     
     $items['admin/islandora/datacite'] = array(
-        'title' => 'Config',
-        'description' => 'General configuration',
+        'title' => 'Datacite alert',
+        'description' => 'Configuring Datacite alert',
+        'access arguments' => array('administer datacite'),
+    );
+    $items['admin/islandora/datacite/config'] = array(
+        'title' => 'General configuration',
+        'description' => 'Configuring Datacite alert',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('lib4ri_datacite_alert_form'),
         'access arguments' => array('administer datacite'),
         'file' => 'includes/forms.inc',
     );
     
-    $items['islandora/datacite/batch'] = array(
-        'page callback' => 'lib4ri_datacite_alert',
+    $items['admin/islandora/datacite/batch'] = array(
+        'title' => 'Get data',
+        'description' => 'Manage list update',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('lib4ri_datacite_alert_update_form'),
         'access arguments' => array('administer datacite'),
-        'type' => MENU_CALLBACK,
+        'file' => 'includes/forms.inc',
     );
     
     return $items;
@@ -52,6 +60,19 @@ function lib4ri_datacite_alert_batch($params = NULL){
     );
     
     array_push($batch['operations'], array('lib4ri_datacite_alert_fetch', array()));
+    
+    batch_set($batch);
+    
+    // If this function was called from a form submit handler, stop here,
+    // FAPI will handle calling batch_process().
+    
+    // If not called from a submit handler, add the following,
+    // noting the url the user should be sent to once the batch
+    // is finished.
+    // IMPORTANT:
+    // If you set a blank parameter, the batch_process() will cause an infinite loop
+    
+    batch_process();
 }
 
 
@@ -71,4 +92,12 @@ function lib4ri_datacite_alert_fetch(&$context){
 }
 
 
-
+/**
+ * Implements hook_views_api().
+ */
+function lib4ri_datacite_alert_views_api() {
+    return array(
+        'api' => 3,
+        'path' => drupal_get_path('module', 'lib4ri_datacite_alert') . '/views',
+    );
+}

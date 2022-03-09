@@ -28,7 +28,7 @@ function lib4ri_datacite_alert_schema() {
                 'length' => 255,
                 'default' => '',
             ),
-            'link' => array(
+            'url' => array(
                 'type' => 'varchar',
                 'length' => 255,
                 'default' => '',
@@ -53,9 +53,19 @@ function lib4ri_datacite_alert_schema() {
                 'type' => 'varchar',
                 'length' => 255,
                 'default' => '',
-                'not null' => TRUE
+            ),
+            'tstmp' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
             ),
         ),
+        'unique keys' => array(
+            'id' => array('id')
+        ),
+        'primary key' => array(
+            'id'
+        )
     );
        
     return $schema;
