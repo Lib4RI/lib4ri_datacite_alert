@@ -29,6 +29,14 @@ function lib4ri_datacite_alert_menu() {
         'file' => 'includes/forms.inc',
     );
     
+    $items['islandora/datacite/remarks'] = array(
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('lib4ri_datacite_alert_set_remarks_form'),
+        'access arguments' => array('edit datacite entries'),
+        'type' => MENU_CALLBACK,
+        'file' => 'includes/forms.inc',
+    );
+    
     return $items;
 }
 
@@ -38,6 +46,12 @@ function lib4ri_datacite_alert_menu() {
  */
 function lib4ri_datacite_alert_permission() {
     return array(
+        'access datacite data' => array(
+            'title' => t('Access Datacite data'),
+        ),
+        'edit datacite entries' => array(
+            'title' => t('Edit Datacite entries'),
+        ),
         'administer datacite' => array(
             'title' => t('Administer Datacite data'),
         ),
