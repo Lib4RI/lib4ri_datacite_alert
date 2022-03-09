@@ -8,7 +8,7 @@
 /**
  * Implements hook_views_default_views().
  */
-function protein_db_views_default_views() {
+function lib4ri_datacite_alert_views_default_views() {
   $views = array();
   /*******************************************************************************************************/
 
