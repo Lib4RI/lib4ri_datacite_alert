@@ -73,7 +73,7 @@ function lib4ri_datacite_alert_batch($params = NULL){
         'file' => drupal_get_path('module', 'protein_db') . '/protein_db.module',
     );
     
-    array_push($batch['operations'], array('lib4ri_datacite_alert_fetch', array()));
+    array_push($batch['operations'], array('lib4ri_datacite_alert_fetch', array($params)));
     
     batch_set($batch);
     
@@ -90,7 +90,7 @@ function lib4ri_datacite_alert_batch($params = NULL){
 }
 
 
-function lib4ri_datacite_alert_fetch(&$context){
+function lib4ri_datacite_alert_fetch($params, &$context){
     if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['current_node'] = 0;
@@ -99,6 +99,7 @@ function lib4ri_datacite_alert_fetch(&$context){
     
     module_load_include('inc', 'lib4ri_datacite_alert', 'includes/classes');
     $upd = new DataCiteRetrieval();
+    $upd->setStartDate($params[0])->setEndDate($params[1])->setDataQuery();
     $upd->update();
     
     $context['sandbox']['current_node']++;

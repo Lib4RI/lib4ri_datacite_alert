@@ -1,6 +1,21 @@
 <?php
 
  function lib4ri_datacite_alert_update_form(){
+     
+     $form['lib4ri_datacite_alert_upd_start'] = array(
+         '#type' => 'textfield',
+         '#title' => t('Starting fetch date'),
+         '#default_value' => variable_get('lib4ri_datacite_alert_upd_start_date'),
+         '#required' => FALSE,
+     );
+
+     $form['lib4ri_datacite_alert_upd_stop'] = array(
+         '#type' => 'textfield',
+         '#title' => t('Ending fetch date'),
+         '#default_value' => 'now',
+         '#required' => FALSE,
+     );
+     
      $form['datacite_upd'] = array(
          '#name' => 'fetch_upd',
          '#type' => 'submit',
@@ -12,7 +27,12 @@
  
  function lib4ri_datacite_alert_update_form_submit(&$form, &$form_state){
     $clicked = $form_state['clicked_button']['#parents'][0];
-    lib4ri_datacite_alert_batch($clicked);
+    $from = $form_state['values']['lib4ri_datacite_alert_upd_start'];
+    $to   = $form_state['values']['lib4ri_datacite_alert_upd_stop'];
+    $dates = [$from, $to];
+    $newdate = date('Y-m-d', time()).'T00:00:00Z'; //today
+    variable_set('lib4ri_datacite_alert_upd_start_date', $newdate);
+    lib4ri_datacite_alert_batch($dates);
  }
  
  function lib4ri_datacite_alert_set_remarks_form($form, &$form_state){

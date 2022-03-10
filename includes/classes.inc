@@ -9,7 +9,8 @@ module_load_include('inc', 'lib4ri_pub_db', 'includes/functions');
 class DataCiteRetrieval{
     protected $serv;
     protected $data;
-    
+    protected $start_date;
+    protected $end_date;
         
     /**
      * Constructor
@@ -32,7 +33,28 @@ class DataCiteRetrieval{
             $this->serv->pushPublisher(trim($publisher->publisher_string));
         }
         
-        $this->serv->pushQueryElement("updated", '[2022-03-09T00:00:00Z TO now]'); //TODO
+        $from = variable_get('lib4ri_datacite_alert_upd_start_date');
+        $to   = variable_get('lib4ri_datacite_alert_upd_stop_date');
+        
+//        $this->serv->pushQueryElement("updated", '[$from TO $to]');
+    }
+    
+    public function setStartDate($date){
+        $this->start_date = $date;
+        
+        return $this;
+    }
+    
+    public function setEndDate($date){
+        $this->end_date = $date;
+        
+        return $this;
+    }
+    
+    public function setDataQuery(){
+        $this->serv->pushQueryElement("updated", "[$this->start_date TO $this->end_date]");
+        
+        return $this;
     }
     
     public function fetch(){
