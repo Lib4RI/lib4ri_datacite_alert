@@ -60,15 +60,23 @@ class DataCiteRetrieval{
     public function fetch(){
         $this->data = $this->normalize($this->serv->serve()->getProcessedArray());
         
-        $this->to_insert = array();
         foreach ($this->data as $item){
             foreach ($item['relatedIdentifiers'] as $identifier){
+                if ($this->getDoraPid($identifier['relatedIdentifier']) || (!$this->isInList($item, $identifier)))
                 lib4ri_datacite_alert_insert_data($item, $identifier);
             }
             
         }
         
         return $this;
+    }
+    
+    private function isInList($item, $identifier){
+        if (count(lib4ri_datacite_alert_get_ids($item, $identifier)) > 0){
+            return true;
+        }
+        
+        return false;
     }
         
     private function getDoraPid($doi){
@@ -97,6 +105,7 @@ class DataCiteRetrieval{
         
 //         return $solr_response;
         
+           return false; 
     }
     
     private function norm_single($element){

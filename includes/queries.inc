@@ -13,6 +13,21 @@ function lib4ri_datacite_alert_insert_data($item, $identifier){
     
 }
 
+function lib4ri_datacite_alert_get_ids($item, $identifier){
+    $res = db_select(LIB4RI_DATACITE_ALERT_DATA_TABLE,'f')
+    ->fields('f', array('id'))
+    ->condition('datadoi', $item['doi'], '=')
+    ->condition('doi', $identifier['relatedIdentifier'], '=')
+    ->condition('relation', $identifier['relationType'], '=')
+    ->execute();
+    
+    $ids = [];
+    foreach ($res as $id) {
+        array_push($ids, $id);
+    }
+    return $ids;
+}
+
 function lib4ri_datacite_alert_update_remarks($data){
     db_update(LIB4RI_DATACITE_ALERT_DATA_TABLE)
     ->fields(array(
