@@ -113,7 +113,7 @@ class DataCiteRetrieval{
              return false;
          }
          
-         return implode(';', pids);
+         return implode(';', $pids);
          
     }
     
