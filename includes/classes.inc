@@ -62,8 +62,10 @@ class DataCiteRetrieval{
         
         foreach ($this->data as $item){
             foreach ($item['relatedIdentifiers'] as $identifier){
-                if ($this->getDoraPid($identifier['relatedIdentifier']) || (!$this->isInList($item, $identifier)))
-                lib4ri_datacite_alert_insert_data($item, $identifier);
+                $identifier['pid'] = $this->getDoraPid($identifier['relatedIdentifier']);
+                if ((!is_null($identifier['pid'])) || (!$this->isInList($item, $identifier))){
+                    lib4ri_datacite_alert_insert_data($item, $identifier);
+                }
             }
             
         }
@@ -81,31 +83,38 @@ class DataCiteRetrieval{
         
     private function getDoraPid($doi){
         
-        //TODO
-//         $collections = array_map(function($val){return 'RELS_EXT_isMemberOfCollection_uri_ms:info\\:fedora/'.$val;},str_replace(':','\\:',array_map('trim',explode(',',variable_get('publication_DB_search_collections')))));
+         $collections = array_map(function($val){return 'RELS_EXT_isMemberOfCollection_uri_ms:info\\:fedora/'.$val;},str_replace(':','\\:',array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections')))));
         
-//         array_push($cond, variable_get('protein_db_solr_doi_field').':'.islandora_solr_lesser_escape($doi));
+         array_push($cond, variable_get('lib4ri_pub_db_resdata_solr_doi_field').':'.islandora_solr_lesser_escape($doi));
         
-//         $params['f'][0] = implode(' OR ', $cond);
-//         $params['f'][1] = implode(' OR ', $collections);
+         $params['f'][0] = implode(' OR ', $cond);
+         $params['f'][1] = implode(' OR ', $collections);
         
-//         $sq = new IslandoraSolrQueryProcessor();
+         $sq = new IslandoraSolrQueryProcessor();
         
 //         // Build and execute Apache Solr query.
-//         $sq->buildQuery('*:*', $params);
-//         $sq->solrParams['facet'] = "false";
-//         $sq->solrParams['fl'] = 'PID, '.variable_get('protein_db_solr_beamline_field').', '. variable_get('protein_db_solr_facility_field');
-//         $sq->solrLimit = '10';
-//         $sq->executeQuery(FALSE, TRUE);
+         $sq->buildQuery('*:*', $params);
+         $sq->solrParams['facet'] = "false";
+         $sq->solrParams['fl'] = 'PID';
+         $sq->solrLimit = '10';
+         $sq->executeQuery(FALSE, TRUE);
         
-//         $solr_response = [];
-//         foreach ($sq->islandoraSolrResult['response']['objects'] as $object) {
-//             array_push($solr_response, $object['solr_doc']);
-//         }
+         $solr_response = [];
+         foreach ($sq->islandoraSolrResult['response']['objects'] as $object) {
+             array_push($solr_response, $object['solr_doc']);
+         }
         
-//         return $solr_response;
-        
-           return false; 
+         $pids = [];
+         foreach ($solr_response as $repoobj){
+             array_push($pids, $repoobj['PID']);
+         }
+         return true;
+         if (count($pids) == 0){
+             return false;
+         }
+         
+         return implode(';', pids);
+         
     }
     
     private function norm_single($element){
