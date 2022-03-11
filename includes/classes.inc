@@ -63,7 +63,7 @@ class DataCiteRetrieval{
         foreach ($this->data as $item){
             foreach ($item['relatedIdentifiers'] as $identifier){
                 $identifier['pid'] = $this->getDoraPid($identifier['relatedIdentifier']);
-                if ((!is_null($identifier['pid'])) && (!$this->isInList($item, $identifier))){
+                if (($identifier['pid'] !== false) && (!$this->isInList($item, $identifier))){
                     lib4ri_datacite_alert_insert_data($item, $identifier);
                 }
             }
