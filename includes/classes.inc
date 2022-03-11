@@ -84,7 +84,7 @@ class DataCiteRetrieval{
     private function getDoraPid($doi){
         
          $collections = array_map(function($val){return 'RELS_EXT_isMemberOfCollection_uri_ms:info\\:fedora/'.$val;},str_replace(':','\\:',array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections')))));
-        
+         $cond = array();
          array_push($cond, variable_get('lib4ri_pub_db_resdata_solr_doi_field').':'.islandora_solr_lesser_escape($doi));
         
          $params['f'][0] = implode(' OR ', $cond);
