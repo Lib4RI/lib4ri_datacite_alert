@@ -63,7 +63,7 @@ class DataCiteRetrieval{
         foreach ($this->data as $item){
             foreach ($item['relatedIdentifiers'] as $identifier){
                 $identifier['pid'] = $this->getDoraPid($identifier['relatedIdentifier']);
-                if ((!is_null($identifier['pid'])) || (!$this->isInList($item, $identifier))){
+                if ((!is_null($identifier['pid'])) && (!$this->isInList($item, $identifier))){
                     lib4ri_datacite_alert_insert_data($item, $identifier);
                 }
             }
@@ -108,7 +108,7 @@ class DataCiteRetrieval{
          foreach ($solr_response as $repoobj){
              array_push($pids, $repoobj['PID']);
          }
-         return true;
+         
          if (count($pids) == 0){
              return false;
          }
