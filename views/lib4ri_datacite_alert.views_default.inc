@@ -146,6 +146,11 @@ function lib4ri_datacite_alert_views_default_views() {
   $handler->display->display_options['fields']['pid']['id'] = 'pid';
   $handler->display->display_options['fields']['pid']['table'] = 'lib4ri_datacite_alert_data';
   $handler->display->display_options['fields']['pid']['field'] = 'pid';
+  $handler->display->display_options['fields']['pid']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['pid']['alter']['path'] = 'islandora/object/[pid]';
+  $handler->display->display_options['fields']['pid']['alter']['target'] = '_blank';
+  $handler->display->display_options['fields']['pid']['alter']['nl2br'] = TRUE;
+  $handler->display->display_options['fields']['pid']['alter']['strip_tags'] = TRUE;
   /* Field: Datacite alert: Publisher */
   $handler->display->display_options['fields']['publisher']['id'] = 'publisher';
   $handler->display->display_options['fields']['publisher']['table'] = 'lib4ri_datacite_alert_data';
@@ -183,6 +188,13 @@ function lib4ri_datacite_alert_views_default_views() {
   $handler->display->display_options['fields']['nothing']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['nothing']['alter']['path'] = 'islandora/datacite/remarks?id=[id]';
   $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = 'Add to DORA';
+  $handler->display->display_options['fields']['nothing_1']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_1']['alter']['path'] = 'islandora/datacite/add/?PID=[pid]&DATADOI=[datadoi]';
   
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -216,11 +228,13 @@ function lib4ri_datacite_alert_views_default_views() {
       t('Data URL'),
       t('Remarks'),
       t('Edit remarks'),
+      t('Custom text'),
+      t('Add to DORA'),
       t('Page'),
   );
   
-    /*******************************************************************************************************/
-    $views['protein_db'] = $view;
+  /*******************************************************************************************************/
+    $views['lib4ri_datacite_alert'] = $view;
     
     return $views;
 }

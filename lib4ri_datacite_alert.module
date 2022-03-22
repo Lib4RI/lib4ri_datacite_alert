@@ -36,6 +36,13 @@ function lib4ri_datacite_alert_menu() {
         'type' => MENU_CALLBACK,
         'file' => 'includes/forms.inc',
     );
+
+    $items['islandora/datacite/add'] = array(
+        'page callback' => 'lib4ri_datacite_alert_add_data',
+        'access arguments' => array('edit datacite entries'),
+        'type' => MENU_CALLBACK,
+//        'file' => 'lib4ri_datacite_alert.module',
+    );
     
     return $items;
 }
@@ -115,4 +122,54 @@ function lib4ri_datacite_alert_views_api() {
         'api' => 3,
         'path' => drupal_get_path('module', 'lib4ri_datacite_alert') . '/views',
     );
+}
+
+
+function lib4ri_datacite_alert_add_data(){
+    module_load_include('inc', 'lib4ri_datacite_alert', 'includes/define');
+    
+    /* ADD to MODS */
+    $datadoi = trim($_GET['DATADOI'],'_');
+    $object = islandora_object_load(trim($_GET['PID'],'_'));
+    
+    $mods = $object['MODS']->content;
+    $dom = new DOMDocument();
+    $dom->loadXML($object['MODS']->content);
+    $xpath = new DOMXPath($dom);
+    $xpath->registerNamespace('m', 'http://loc.gov/mods/v3');
+    
+    $section = $xpath->query(variable_get('lib4ri_pub_db_resdata_section'))[0];
+    if (is_null($section)){
+        $mods_root = $xpath->query('//mods:mods')[0];
+        $section = $dom->createElement(variable_get('lib4ri_pub_db_resdata_section_name'));
+        $section->setAttribute(variable_get('lib4ri_pub_db_resdata_section_attribute_label'),variable_get('lib4ri_pub_db_resdata_section_attribute_value'));
+        $mods_root->appendChild($section);
+        $mods_dois = [];
+    }
+    else{
+        $mods_dois = $xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_tag'));
+    }
+    
+    
+    
+    $data_uri = $dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
+    $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
+    $data_uri->nodeValue = 'https://doi.org/'.$datadoi;
+    $section->appendChild($data_uri);
+
+    $object['MODS']->content = $dom->saveXML();
+    /***************/
+    
+    $query = db_update(LIB4RI_DATACITE_ALERT_DATA_TABLE)->fields(array('status' => 'Added'));
+    
+    if (!empty($doi)){
+        $query->condition('doi', $doi, '=')->execute();
+    }
+    else{
+        $query->condition('datadoi', $datadoi, '=')->execute();
+    }
+    
+    
+    drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
+    
 }
