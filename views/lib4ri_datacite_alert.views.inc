@@ -138,9 +138,9 @@ function lib4ri_datacite_alert_views_data() {
                 'handler' => 'views_handler_field_markup',
                 'click sortable' => TRUE,
             ),
-            //             'filter' => array(
-            //                 'handler' => 'views_handler_filter_string',
-            //             ),
+                        'filter' => array(
+                            'handler' => 'views_handler_filter_string',
+                        ),
             
         ),
         

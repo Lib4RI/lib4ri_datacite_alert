@@ -208,7 +208,7 @@ function lib4ri_datacite_alert_blacklist(){
         drupal_set_message("($id) Data package $datadoi is already in DORA object $pid", 'error');
     }
     elseif(_lib4ri_datacite_alert_check_blacklisted($id)){
-        db_update(LIB4RI_DATACITE_ALERT_DATA_TABLE)->fields(array('status' => 'Do NOT add'))->condition('id', $id, '=')->execute();
+        db_update(LIB4RI_DATACITE_ALERT_DATA_TABLE)->fields(array('status' => ''))->condition('id', $id, '=')->execute();
         drupal_set_message("($id) Status cleared", 'status');
     }
     else{

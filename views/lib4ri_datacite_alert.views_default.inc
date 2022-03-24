@@ -194,17 +194,60 @@ function lib4ri_datacite_alert_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_1']['ui_name'] = 'Add to DORA';
+  $handler->display->display_options['fields']['nothing_1']['label'] = '';
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = 'Add to DORA';
   $handler->display->display_options['fields']['nothing_1']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['nothing_1']['alter']['path'] = 'islandora/datacite/add/?PID=[pid]&DATADOI=[datadoi]&ID=[id]';
+  $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   /* Field: Check status */
   $handler->display->display_options['fields']['nothing_2']['id'] = 'nothing_2';
   $handler->display->display_options['fields']['nothing_2']['table'] = 'views';
   $handler->display->display_options['fields']['nothing_2']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_2']['ui_name'] = 'Check status';
+  $handler->display->display_options['fields']['nothing_2']['label'] = '';
   $handler->display->display_options['fields']['nothing_2']['alter']['text'] = 'Check status';
   $handler->display->display_options['fields']['nothing_2']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['nothing_2']['alter']['path'] = 'islandora/datacite/check/?PID=[pid]&DATADOI=[datadoi]&ID=[id]';
+  $handler->display->display_options['fields']['nothing_2']['element_label_colon'] = FALSE;
+  /* Field: Do NOT add */
+  $handler->display->display_options['fields']['nothing_3']['id'] = 'nothing_3';
+  $handler->display->display_options['fields']['nothing_3']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_3']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_3']['ui_name'] = 'Do NOT add';
+  $handler->display->display_options['fields']['nothing_3']['label'] = '';
+  $handler->display->display_options['fields']['nothing_3']['alter']['text'] = 'Mark as \'Do NOT add\'';
+  $handler->display->display_options['fields']['nothing_3']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['nothing_3']['alter']['path'] = 'islandora/datacite/blacklist/?ID=[id]&PID=[pid]&DATADOI=[datadoi]';
+  $handler->display->display_options['fields']['nothing_3']['element_label_colon'] = FALSE;
+  /* Filter criterion: Datacite alert: Status */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'lib4ri_datacite_alert_data';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['status']['expose']['operator_id'] = 'status_op';
+  $handler->display->display_options['filters']['status']['expose']['label'] = 'Status';
+  $handler->display->display_options['filters']['status']['expose']['operator'] = 'status_op';
+  $handler->display->display_options['filters']['status']['expose']['identifier'] = 'status';
+  $handler->display->display_options['filters']['status']['is_grouped'] = TRUE;
+  $handler->display->display_options['filters']['status']['group_info']['label'] = 'Status';
+  $handler->display->display_options['filters']['status']['group_info']['identifier'] = 'status';
+  $handler->display->display_options['filters']['status']['group_info']['group_items'] = array(
+      1 => array(
+          'title' => 'In DORA',
+          'operator' => '=',
+          'value' => 'In DORA',
+      ),
+      2 => array(
+          'title' => 'Do NOT add',
+          'operator' => '=',
+          'value' => 'Do NOT add',
+      ),
+      3 => array(
+          'title' => 'NOT in DORA',
+          'operator' => 'not',
+          'value' => 'O',
+      ),
+  );
   
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -237,9 +280,9 @@ function lib4ri_datacite_alert_views_default_views() {
       t('Data URL'),
       t('Remarks'),
       t('Edit remarks'),
-      t('Custom text'),
       t('Add to DORA'),
       t('Check status'),
+      t('Mark as \'Do NOT add\''),
       t('Page'),
   );
   
