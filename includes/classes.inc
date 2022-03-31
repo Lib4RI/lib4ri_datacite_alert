@@ -109,6 +109,9 @@ class DataCiteRetrieval{
     }
     
     private function norm_single($element){
+        if(!isset($element)){
+            return null;
+        }
         
         if (!isset($element[0])){
             $out = array();
@@ -121,7 +124,7 @@ class DataCiteRetrieval{
     
     private function normalize($data){
         $out = array();
-        
+ 
         $data = $this->norm_single($data);
 //         if (!isset($data[0])){
 //             unset($temp);
@@ -132,11 +135,14 @@ class DataCiteRetrieval{
 //         }
         
         foreach ($data as $element){
+             
             $element['item'] = $this->norm_single($element['item']);
-            foreach ($element['item'] as $item){
-                $item['relatedIdentifiers'] = $this->norm_single($item['relatedIdentifiers']['item']);
-                array_push($out, $item);
-                unset($item);
+            if (isset($element['item'])){
+                foreach ($element['item'] as $item){
+                    $item['relatedIdentifiers'] = $this->norm_single($item['relatedIdentifiers']['item']);
+                    array_push($out, $item);
+                    unset($item);
+                }
             }
         }
         
@@ -144,8 +150,8 @@ class DataCiteRetrieval{
     }
     
     public function filter(){
-        foreach ($this->data as $item){
-            foreach ($item['relatedIdentifiers'] as $identifier){
+        foreach ($this->data as $item){            
+            foreach ($item['relatedIdentifiers'] as $identifier){                              
                 $identifier['pid'] = $this->getDoraPid($identifier['relatedIdentifier']);
                 if (($identifier['pid'] !== false) && (!$this->isInList($item, $identifier))){
                     array_push($this->to_add, array('item' => $item, 'identifier' => $identifier));
