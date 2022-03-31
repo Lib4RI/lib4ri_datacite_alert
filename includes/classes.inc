@@ -11,6 +11,7 @@ class DataCiteRetrieval{
     protected $data;
     protected $start_date;
     protected $end_date;
+    protected $to_add = [];
         
     /**
      * Constructor
@@ -33,8 +34,8 @@ class DataCiteRetrieval{
             $this->serv->pushPublisher(trim($publisher->publisher_string));
         }
         
-        $from = variable_get('lib4ri_datacite_alert_upd_start_date');
-        $to   = variable_get('lib4ri_datacite_alert_upd_stop_date');
+//         $from = variable_get('lib4ri_datacite_alert_upd_start_date');
+//         $to   = variable_get('lib4ri_datacite_alert_upd_stop_date');
         
 //        $this->serv->pushQueryElement("updated", '[$from TO $to]');
     }
@@ -59,17 +60,7 @@ class DataCiteRetrieval{
     
     public function fetch(){
         $this->data = $this->normalize($this->serv->serve()->getProcessedArray());
-        
-        foreach ($this->data as $item){
-            foreach ($item['relatedIdentifiers'] as $identifier){
-                $identifier['pid'] = $this->getDoraPid($identifier['relatedIdentifier']);
-                if (($identifier['pid'] !== false) && (!$this->isInList($item, $identifier))){
-                    lib4ri_datacite_alert_insert_data($item, $identifier);
-                }
-            }
-            
-        }
-        
+                
         return $this;
     }
     
@@ -152,9 +143,40 @@ class DataCiteRetrieval{
         return $out;
     }
     
-    public function update(){
-        $this->fetch();
+    public function filter(){
+        foreach ($this->data as $item){
+            foreach ($item['relatedIdentifiers'] as $identifier){
+                $identifier['pid'] = $this->getDoraPid($identifier['relatedIdentifier']);
+                if (($identifier['pid'] !== false) && (!$this->isInList($item, $identifier))){
+                    array_push($this->to_add, array('item' => $item, 'identifier' => $identifier));
+                }
+            }
+            
+        }
         
         return $this;
+    }
+    
+    public function update(){
+        
+        foreach ($this->to_add as $item){
+                    lib4ri_datacite_alert_insert_data($item['item'], $item['identifier']);
+        }
+        
+        return $this;
+    }
+    
+    public function setDoi($doi){
+        $this->serv->setDoi($doi);
+        
+        return $this;
+    }
+    
+    public function getData(){
+        return $this->data;
+    }
+    
+    public function getToAdd(){
+        return $this->to_add;
     }
 }
