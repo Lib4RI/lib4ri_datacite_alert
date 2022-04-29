@@ -262,3 +262,28 @@ function _lib4ri_datacite_alert_check_blacklisted($id){
     }
     
 }
+
+function lib4ri_datacite_alert_menu_alter(&$items) {
+    $items['islandora/object/%islandora_object/lib4ri_datacite_alert'] = array(
+        'title' => 'Data Packages Management',
+        'page callback' => 'lib4ri_datacite_alert_data_packages_management',
+        'page arguments' => array(2),
+//        'access callback' => '',
+        'access arguments' => array('edit datacite entries'),
+        'type' => MENU_LOCAL_TASK,
+//        'type' => MENU_CALLBACK,
+//        'file' => '',
+    );
+}
+
+function lib4ri_datacite_alert_data_packages_management($object){
+    $view = views_get_view('pub_datacite_packages');
+    $display_id = 'default';
+    $view->display['default']->display_options['filters']['pid_1']['value'] = $object->id;
+    $content = $view->execute_display($display_id, NULL);
+    
+    $build['content'] = array(
+        'dummy' => array('#markup' => $content)
+    );
+    return $build;
+}
