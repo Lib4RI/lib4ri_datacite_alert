@@ -273,6 +273,8 @@ function lib4ri_datacite_alert_menu_alter(&$items) {
         'type' => MENU_LOCAL_TASK,
 //        'type' => MENU_CALLBACK,
 //        'file' => '',
+        'theme callback' => 'variable_get',
+        'theme arguments' => array('admin_theme'),
     );
 }
 
