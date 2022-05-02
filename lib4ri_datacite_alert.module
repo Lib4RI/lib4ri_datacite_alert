@@ -285,7 +285,28 @@ function lib4ri_datacite_alert_data_packages_management($object){
     $content = $view->execute_display($display_id, NULL);
     
     $build['content'] = array(
-        'dummy' => array('#markup' => $content)
+        'inmods' => array('#markup' => lib4ri_datacite_alert_get_packages_in_mods($object)),
+        'check' => array('#markup' => '<a href="#example">Example headline</a><hr><br><br>'),
+        'dummy' => array('#markup' => $content),
     );
     return $build;
 }
+
+function lib4ri_datacite_alert_get_packages_in_mods($object){
+    $dom = new DOMDocument();
+    $dom->loadXML($object['MODS']->content);
+    $xpath = new DOMXPath($dom);
+    $dataDois = $xpath->query('//mods:mods/mods:extension/mods:resource/mods:identifier [@identifierType="DOI"]' );
+    
+    
+    $output = '<table class="views-table"><thead><tr><th>DOI<th>--</tr></thead><tbody>';
+        
+    foreach ($dataDois as $doi){
+        $output .= "<tr class=\"even\"><th>$doi->nodeValue<th>---</tr>";
+    }
+    
+    $output .= "</tbody></table>";
+    
+    return $output;
+}
+
