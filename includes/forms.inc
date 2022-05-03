@@ -48,6 +48,10 @@
          '#value' => 'Insert',
      );
      
+     $form['referer'] = array(
+         '#type' => 'hidden',
+     );
+     
      return $form;
  }
  
@@ -59,6 +63,7 @@
      $id = trim($_GET['id'],'_');
      
      $form['lib4ri_datacite_alert_remarks']['#default_value'] = lib4ri_datacite_alert_get_remarks($id);
+     $form['referer']['#default_value'] = $_SERVER['HTTP_REFERER'];
      
      return $form;
  }
@@ -70,6 +75,6 @@
          module_load_include('inc', 'lib4ri_datacite_alert', 'includes/queries');
          lib4ri_datacite_alert_update_remarks(array('remarks'=>$form_state['values']['lib4ri_datacite_alert_remarks'], 'id'=>$id));
      }
-     drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
+     drupal_goto($form_state['values']['referer']);
  }
  

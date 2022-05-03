@@ -155,12 +155,14 @@ function lib4ri_datacite_alert_add_data(){
     
     if(_lib4ri_datacite_alert_check_blacklisted($id)){
         drupal_set_message("($id) Data package $datadoi is marked as 'Do NOT Add' to object $pid", 'error');
-        drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
+        drupal_goto($_SERVER['HTTP_REFERER']);
+//        drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
     }
     
     if(_lib4ri_datacite_alert_check_in_dora($pid,$datadoi)){
         drupal_set_message("($id) Data package $datadoi already in DORA object $pid", 'warning');
-        drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
+        drupal_goto($_SERVER['HTTP_REFERER']);
+//        drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
     }
     
     _lib4ri_datacite_alert_add_to_dora($pid, $datadoi);
@@ -175,7 +177,8 @@ function lib4ri_datacite_alert_add_data(){
     }
         
     /***************/
-    drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
+    drupal_goto($_SERVER['HTTP_REFERER']);
+//    drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
     
 }
 
@@ -209,7 +212,8 @@ function lib4ri_datacite_alert_check_status(){
         
     if(_lib4ri_datacite_alert_check_blacklisted($id)){
         drupal_set_message("($id) Data package $datadoi is marked as 'Do NOT Add' to object $pid", 'status');
-        drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
+        drupal_goto($_SERVER['HTTP_REFERER']);
+//        drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
     }
     
     if(_lib4ri_datacite_alert_check_in_dora($pid,$datadoi)){
@@ -221,7 +225,8 @@ function lib4ri_datacite_alert_check_status(){
     }
     
     db_update(LIB4RI_DATACITE_ALERT_DATA_TABLE)->fields(array('status' => $status))->condition('id', $id, '=')->execute();
-    drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
+    drupal_goto($_SERVER['HTTP_REFERER']);
+//    drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
 }
 
 function lib4ri_datacite_alert_blacklist(){
@@ -242,7 +247,8 @@ function lib4ri_datacite_alert_blacklist(){
         drupal_set_message("($id) Data package $datadoi marked as 'Do NOT Add' to object $pid", 'status');
     }
     
-    drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
+    drupal_goto($_SERVER['HTTP_REFERER']);
+//    drupal_goto('admin/islandora/lib4ri_datacite_alert/datacite-alert');
 }
 
 function _lib4ri_datacite_alert_check_in_dora($pid, $datadoi){
