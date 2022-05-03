@@ -44,6 +44,12 @@ function lib4ri_datacite_alert_menu() {
 //        'file' => 'lib4ri_datacite_alert.module',
     );
 
+    $items['islandora/datacite/del'] = array(
+        'page callback' => 'lib4ri_datacite_alert_del_data',
+        'access arguments' => array('edit datacite entries'),
+        'type' => MENU_CALLBACK,
+    );
+    
     $items['islandora/datacite/check'] = array(
         'page callback' => 'lib4ri_datacite_alert_check_status',
         'access arguments' => array('edit datacite entries'),
@@ -305,7 +311,7 @@ function lib4ri_datacite_alert_get_packages_in_mods($object){
     $oddeven = array('odd', 'even');
     $count = 0;
     foreach ($dataDois as $doi){
-        $output .= "<tr class=\"".$oddeven[$count++%2]."\"><td><a href=\"https://doi.org/$doi->nodeValue\" target=\"_blank\">$doi->nodeValue</a><td>Remove</tr>";
+        $output .= "<tr class=\"".$oddeven[$count++%2]."\"><td><a href=\"https://doi.org/$doi->nodeValue\" target=\"_blank\">$doi->nodeValue</a><td><a href=\"islandora/datacite/del?PID=$object->id&DATADOI=$doi->nodeValue\">Remove</a></tr>";
     }
     
     $output .= "</tbody></table>";
