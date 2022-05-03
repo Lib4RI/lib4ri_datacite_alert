@@ -184,12 +184,19 @@ function lib4ri_datacite_alert_del_data(){
     $pid = trim($_GET['PID'],'_');
     
     $object = islandora_object_load($pid);
-    $mods = $object['MODS']->content;
-    $dom = new DOMDocument();
-    $dom->loadXML($object['MODS']->content);
+    $dataDois = lib4ri_datacite_alert_get_packages_in_mods($object);
     
+    foreach ($dataDois as $doi){
+        if (strtolower($doi->nodeValue) == strtolower($datadoi)){
+            $doi->parentNode->removeChild($doi);
+            $object['MODS']->content = $doi->ownerDocument->saveXML();
+            break;
+        }
+    }
     
+    drupal_goto("islandora/object/$pid/lib4ri_datacite_alert");
     
+    return;
 }
 
 function lib4ri_datacite_alert_check_status(){
@@ -322,6 +329,7 @@ function lib4ri_datacite_alert_get_packages_in_mods($object){
 }
 
 function lib4ri_datacite_alert_table_in_mods($object){
+    global $base_url;
     $dataDois = lib4ri_datacite_alert_get_packages_in_mods($object);
     
     $output = '<table class="views-table"><thead><tr><th>DOI<th>Publisher<th>Alternate Identifiers<th></tr></thead><tbody>';
@@ -336,13 +344,14 @@ function lib4ri_datacite_alert_table_in_mods($object){
             $ids_markup .= "<a href=\"$altId->nodeValue\" target=\"_blank\">$altId->nodeValue</a><br>"; 
         }
         $ids_markup = str_lreplace('<br>', '', $ids_markup);
-        $output .= "<tr class=\"".$oddeven[$count++%2]."\"><td><a href=\"https://doi.org/$doi->nodeValue\" target=\"_blank\">$doi->nodeValue</a><td>$publisher<td>$ids_markup<td><a href=\"islandora/datacite/del?PID=$object->id&DATADOI=$doi->nodeValue\">Delete</a></tr>";
+        $output .= "<tr class=\"".$oddeven[$count++%2]."\"><td><a href=\"https://doi.org/$doi->nodeValue\" target=\"_blank\">$doi->nodeValue</a><td>$publisher<td>$ids_markup<td><a href=\"$base_url/islandora/datacite/del?PID=$object->id&DATADOI=$doi->nodeValue\">Delete</a></tr>";
     }
     
     $output .= "</tbody></table>";
     
     return $output;
 }
+
 
 function str_lreplace($search, $replace, $subject)
 {
