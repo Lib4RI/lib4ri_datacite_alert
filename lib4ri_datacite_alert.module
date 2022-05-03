@@ -306,12 +306,19 @@ function lib4ri_datacite_alert_get_packages_in_mods($object){
     $dataDois = $xpath->query('//mods:mods/mods:extension/mods:resource/mods:identifier [@identifierType="DOI"]' );
     
     
-    $output = '<table class="views-table"><thead><tr><th>DOI<th></tr></thead><tbody>';
+    $output = '<table class="views-table"><thead><tr><th>DOI<th>Alternate Identifiers<th></tr></thead><tbody>';
         
     $oddeven = array('odd', 'even');
     $count = 0;
     foreach ($dataDois as $doi){
-        $output .= "<tr class=\"".$oddeven[$count++%2]."\"><td><a href=\"https://doi.org/$doi->nodeValue\" target=\"_blank\">$doi->nodeValue</a><td><a href=\"islandora/datacite/del?PID=$object->id&DATADOI=$doi->nodeValue\">Remove</a></tr>";
+        $altIds = $doi->parentNode->getElementsByTagName('alternateIdentifier');
+        
+        $ids_markup = '';
+        foreach ($altIds as $altId){
+            $ids_markup .= "<a href=\"$altId->nodeValue\" target=\"_blank\">$altId->nodeValue</a><br>"; 
+        }
+        $ids_markup = str_lreplace('<br>', '', $ids_markup);
+        $output .= "<tr class=\"".$oddeven[$count++%2]."\"><td><a href=\"https://doi.org/$doi->nodeValue\" target=\"_blank\">$doi->nodeValue</a><td>$ids_markup<td><a href=\"islandora/datacite/del?PID=$object->id&DATADOI=$doi->nodeValue\">Remove</a></tr>";
     }
     
     $output .= "</tbody></table>";
@@ -319,3 +326,14 @@ function lib4ri_datacite_alert_get_packages_in_mods($object){
     return $output;
 }
 
+function str_lreplace($search, $replace, $subject)
+{
+    $pos = strrpos($subject, $search);
+    
+    if($pos !== false)
+    {
+        $subject = substr_replace($subject, $replace, $pos, strlen($search));
+    }
+    
+    return $subject;
+}
