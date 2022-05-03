@@ -286,7 +286,8 @@ function lib4ri_datacite_alert_data_packages_management($object){
     
     $build['content'] = array(
         'inmods' => array('#markup' => lib4ri_datacite_alert_get_packages_in_mods($object)),
-        'check' => array('#markup' => '<a href="#example">Example headline</a><hr><br><br>'),
+        'doi' => array('#markup' => '<br><hr><br><a href="#example">Add to MODS</a><br>'),
+        'check' => array('#markup' => '<br><hr><br><a href="#example">Update Datacite list</a><br><br><hr><br>'),
         'dummy' => array('#markup' => $content),
     );
     return $build;
@@ -299,10 +300,12 @@ function lib4ri_datacite_alert_get_packages_in_mods($object){
     $dataDois = $xpath->query('//mods:mods/mods:extension/mods:resource/mods:identifier [@identifierType="DOI"]' );
     
     
-    $output = '<table class="views-table"><thead><tr><th>DOI<th>--</tr></thead><tbody>';
+    $output = '<table class="views-table"><thead><tr><th>DOI<th></tr></thead><tbody>';
         
+    $oddeven = array('odd', 'even');
+    $count = 0;
     foreach ($dataDois as $doi){
-        $output .= "<tr class=\"even\"><th>$doi->nodeValue<th>---</tr>";
+        $output .= "<tr class=\"".$oddeven[$count++%2]."\"><td><a href=\"https://doi.org/$doi->nodeValue\" target=\"_blank\">$doi->nodeValue</a><td>Remove</tr>";
     }
     
     $output .= "</tbody></table>";
