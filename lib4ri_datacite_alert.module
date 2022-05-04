@@ -369,6 +369,10 @@ function lib4ri_datacite_alert_table_in_mods($object){
     global $base_url;
     $dataDois = lib4ri_datacite_alert_get_packages_in_mods($object);
     
+    if ($dataDois->length == 0){
+        return '<br>NO Data Packages in MODS';
+    }
+    
     $output = '<table class="views-table"><thead><tr><th>DOI<th>Publisher<th>Alternate Identifiers<th></tr></thead><tbody>';
         
     $oddeven = array('odd', 'even');
