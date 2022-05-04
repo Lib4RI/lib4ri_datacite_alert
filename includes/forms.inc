@@ -36,7 +36,7 @@
  }
  
  function lib4ri_datacite_alert_set_remarks_form($form, &$form_state){
-     module_load_include('inc', 'lib4ri_datacite_alert', 'includes/queries');
+//     module_load_include('inc', 'lib4ri_datacite_alert', 'includes/queries');
      $form['lib4ri_datacite_alert_remarks'] = array(
          '#type' => 'textarea',
          '#title' => t('Remarks'),
@@ -78,3 +78,17 @@
      drupal_goto($form_state['values']['referer']);
  }
  
+ function lib4ri_datacite_alert_fetch_package_form(){
+     $form['lib4ri_datacite_alert_fetch_package'] = array(
+         '#type' => 'textfield',
+         '#title' => t('Data package DOI'),
+         '#required' => FALSE,
+     );
+     
+     $form['submit'] = array(
+         '#type' => 'submit',
+         '#value' => 'Fetch data package',
+     );
+     
+     return $form;
+ }

@@ -337,6 +337,7 @@ function lib4ri_datacite_alert_menu_alter(&$items) {
 }
 
 function lib4ri_datacite_alert_data_packages_management($object){
+    module_load_include('inc', 'lib4ri_datacite_alert', 'includes/forms');
     global $base_url;
     $view = views_get_view('pub_datacite_packages');
     $display_id = 'default';
@@ -345,8 +346,9 @@ function lib4ri_datacite_alert_data_packages_management($object){
     
     $build['content'] = array(
         'inmods' => array('#markup' => lib4ri_datacite_alert_table_in_mods($object)),
-        'doi' => array('#markup' => '<br><hr><br><a href="#example">Add to MODS</a><br>'),
-        'check' => array('#markup' => "<br><hr><br><a href=\"$base_url/islandora/datacite/single_pub?PID=$object->id\">Update Datacite list</a><br><br><hr><br>"),
+//        'doi' => array('#markup' => '<br><hr><br><a href="#example">Add to MODS</a><br>'),
+        'doi' => lib4ri_datacite_alert_fetch_package_form(),
+        'check' => array('#markup' => "<br><hr><br><a href=\"$base_url/islandora/datacite/single_pub?PID=$object->id\">Update Datacite list</a><br><br>"),
         'dummy' => array('#markup' => $content),
     );
     return $build;
