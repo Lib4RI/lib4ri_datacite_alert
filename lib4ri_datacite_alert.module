@@ -190,6 +190,8 @@ function lib4ri_datacite_alert_add_data(){
 }
 
 function lib4ri_datacite_alert_del_data(){
+    module_load_include('inc', 'lib4ri_datacite_alert', 'includes/define');
+    
     $datadoi = trim($_GET['DATADOI'],'_');
     $pid = trim($_GET['PID'],'_');
     
@@ -202,6 +204,17 @@ function lib4ri_datacite_alert_del_data(){
             $object['MODS']->content = $doi->ownerDocument->saveXML();
             break;
         }
+    }
+    
+    if(!_lib4ri_datacite_alert_check_in_dora($pid,$datadoi)){
+        drupal_set_message("Data package $datadoi deleted from DORA object $pid", 'status');
+        db_update(LIB4RI_DATACITE_ALERT_DATA_TABLE)->fields(array('status' => ''))
+        ->condition('pid', $pid, '=')
+        ->condition('datadoi', strtolower($datadoi), '=')
+        ->execute();
+    }
+    else{
+        drupal_set_message("It seems that the package $datadoi is not in DORA object $pid", 'error');
     }
     
     drupal_goto("islandora/object/$pid/lib4ri_datacite_alert");
