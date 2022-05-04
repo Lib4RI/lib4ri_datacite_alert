@@ -195,6 +195,11 @@ function lib4ri_datacite_alert_del_data(){
     $datadoi = trim($_GET['DATADOI'],'_');
     $pid = trim($_GET['PID'],'_');
     
+    if(!_lib4ri_datacite_alert_check_in_dora($pid,strtolower($datadoi))){
+        drupal_set_message("It seems that the package $datadoi is not in DORA object $pid", 'error');
+        drupal_goto("islandora/object/$pid/lib4ri_datacite_alert");
+    }
+    
     $object = islandora_object_load($pid);
     $dataDois = lib4ri_datacite_alert_get_packages_in_mods($object);
     
@@ -206,7 +211,7 @@ function lib4ri_datacite_alert_del_data(){
         }
     }
     
-    if(!_lib4ri_datacite_alert_check_in_dora($pid,$datadoi)){
+    if(!_lib4ri_datacite_alert_check_in_dora($pid,strtolower($datadoi))){
         drupal_set_message("Data package $datadoi deleted from DORA object $pid", 'status');
         db_update(LIB4RI_DATACITE_ALERT_DATA_TABLE)->fields(array('status' => ''))
         ->condition('pid', $pid, '=')
@@ -214,7 +219,7 @@ function lib4ri_datacite_alert_del_data(){
         ->execute();
     }
     else{
-        drupal_set_message("It seems that the package $datadoi is not in DORA object $pid", 'error');
+        drupal_set_message("Cannot delete package $datadoi from DORA object $pid", 'error');
     }
     
     drupal_goto("islandora/object/$pid/lib4ri_datacite_alert");
