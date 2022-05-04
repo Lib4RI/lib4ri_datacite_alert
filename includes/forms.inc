@@ -85,10 +85,15 @@
          '#required' => FALSE,
      );
      
-     $form['submit'] = array(
+     $form['lib4ri_datacite_alert_fetch_package_submit'] = array(
          '#type' => 'submit',
-         '#value' => 'Fetch data package',
+         '#value' => 'Add data package',
      );
      
      return $form;
  }
+ 
+ function lib4ri_datacite_alert_fetch_package_form_submit(){
+     
+ }
+ 
