@@ -63,6 +63,13 @@ function lib4ri_datacite_alert_menu() {
         'type' => MENU_CALLBACK,
         //        'file' => 'lib4ri_datacite_alert.module',
     );
+
+    $items['islandora/datacite/single_pub'] = array(
+        'page callback' => 'lib4ri_datacite_alert_fetch_single_pub',
+        'access arguments' => array('edit datacite entries'),
+        'type' => MENU_CALLBACK,
+        //        'file' => 'lib4ri_datacite_alert.module',
+    );
     
     return $items;
 }
@@ -311,6 +318,7 @@ function lib4ri_datacite_alert_menu_alter(&$items) {
 }
 
 function lib4ri_datacite_alert_data_packages_management($object){
+    global $base_url;
     $view = views_get_view('pub_datacite_packages');
     $display_id = 'default';
     $view->display['default']->display_options['filters']['pid_1']['value'] = $object->id;
@@ -319,7 +327,7 @@ function lib4ri_datacite_alert_data_packages_management($object){
     $build['content'] = array(
         'inmods' => array('#markup' => lib4ri_datacite_alert_table_in_mods($object)),
         'doi' => array('#markup' => '<br><hr><br><a href="#example">Add to MODS</a><br>'),
-        'check' => array('#markup' => '<br><hr><br><a href="#example">Update Datacite list</a><br><br><hr><br>'),
+        'check' => array('#markup' => "<br><hr><br><a href=\"$base_url/islandora/datacite/single_pub?PID=$object->id\">Update Datacite list</a><br><br><hr><br>"),
         'dummy' => array('#markup' => $content),
     );
     return $build;
@@ -358,6 +366,33 @@ function lib4ri_datacite_alert_table_in_mods($object){
     return $output;
 }
 
+function lib4ri_datacite_alert_fetch_single_pub(){
+    module_load_include('inc', 'lib4ri_datacite_alert', 'includes/classes');
+    $pid = trim($_GET['PID'],'_');  
+    $object = islandora_object_load($pid);
+    $dom = new DOMDocument();
+    $dom->loadXML($object['MODS']->content);
+    $xpath = new DOMXPath($dom);
+    $doi = $xpath->query('//mods:mods/mods:identifier [@type="doi"]' )->item(0)->nodeValue;
+    
+    $upd = new DataCiteRetrieval();
+    $upd->setDoi($doi);
+    $upd->fetch()->filter();
+    $upd->update();
+    
+    $ntoadd = count($upd->getToAdd());
+    if ($ntoadd == 0){
+        $status = 'warning';
+    }
+    else {
+        $status = 'status';
+    }
+    drupal_set_message("Found $ntoadd new data package(s) for DORA object $pid", $status);
+    
+    drupal_goto($_SERVER['HTTP_REFERER']);
+}
+
+/********************************************************************************/
 
 function str_lreplace($search, $replace, $subject)
 {
