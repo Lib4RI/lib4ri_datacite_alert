@@ -51,3 +51,17 @@ function lib4ri_datacite_alert_get_remarks($id){
     return $remarks[0]->remarks;
     
 }
+
+function lib4ri_datacite_alert_get_publisher_label($publisher){
+    $res = db_select(LIB4RI_DATACITE_ALERT_PUBLISHERS_TABLE,'f')
+    ->fields('f', array('label'))
+    ->condition('publisher_string', $publisher, '=')
+    ->execute();
+    
+    $labels = [];
+    foreach ($res as $label) {
+        array_push($labels, $label);
+    }
+    return $labels[0]->label;
+    
+}

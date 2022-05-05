@@ -366,6 +366,7 @@ function lib4ri_datacite_alert_get_packages_in_mods($object){
 }
 
 function lib4ri_datacite_alert_table_in_mods($object){
+    module_load_include('inc', 'lib4ri_datacite_alert', 'includes/queries');
     global $base_url;
     $dataDois = lib4ri_datacite_alert_get_packages_in_mods($object);
     
@@ -373,19 +374,20 @@ function lib4ri_datacite_alert_table_in_mods($object){
         return '<br>NO Data Packages in MODS';
     }
     
-    $output = '<table class="views-table"><thead><tr><th>DOI<th>Publisher<th>Alternate Identifiers<th></tr></thead><tbody>';
+    $output = '<table class="views-table"><thead><tr><th>DOI<th>Publisher<th>Publisher label<th>Alternate Identifiers<th></tr></thead><tbody>';
         
     $oddeven = array('odd', 'even');
     $count = 0;
     foreach ($dataDois as $doi){
         $altIds = $doi->parentNode->getElementsByTagName('alternateIdentifier');
         $publisher = $doi->parentNode->getElementsByTagName('publisher')->item(0)->nodeValue;
+        $publisher_label = lib4ri_datacite_alert_get_publisher_label($publisher);
         $ids_markup = '';
         foreach ($altIds as $altId){
             $ids_markup .= "<a href=\"$altId->nodeValue\" target=\"_blank\">$altId->nodeValue</a><br>"; 
         }
         $ids_markup = str_lreplace('<br>', '', $ids_markup);
-        $output .= "<tr class=\"".$oddeven[$count++%2]."\"><td><a href=\"https://doi.org/$doi->nodeValue\" target=\"_blank\">$doi->nodeValue</a><td>$publisher<td>$ids_markup<td><a href=\"$base_url/islandora/datacite/del?PID=$object->id&DATADOI=$doi->nodeValue\">Delete</a></tr>";
+        $output .= "<tr class=\"".$oddeven[$count++%2]."\"><td><a href=\"https://doi.org/$doi->nodeValue\" target=\"_blank\">$doi->nodeValue</a><td>$publisher<td>$publisher_label<td>$ids_markup<td><a href=\"$base_url/islandora/datacite/del?PID=$object->id&DATADOI=$doi->nodeValue\">Delete</a></tr>";
     }
     
     $output .= "</tbody></table>";
