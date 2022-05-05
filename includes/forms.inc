@@ -93,7 +93,23 @@
      return $form;
  }
  
- function lib4ri_datacite_alert_fetch_package_form_submit(){
+ function lib4ri_datacite_alert_fetch_package_form_submit($form, &$form_state){
+     $upd = new DataCiteRetrieval();
+     $upd->setDoi($doi);
+     $upd->setDoraPid($pid);
+     $upd->fetch()->filter();
+     $upd->update();
+     
+     $ntoadd = count($upd->getToAdd());
+     if ($ntoadd == 0){
+         $status = 'warning';
+     }
+     else {
+         $status = 'status';
+     }
+     drupal_set_message("Found $ntoadd new data package(s) for DORA object $pid", $status);
+     
+     drupal_goto($_SERVER['HTTP_REFERER']);
      
  }
  

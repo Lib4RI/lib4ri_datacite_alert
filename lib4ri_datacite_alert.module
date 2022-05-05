@@ -71,6 +71,13 @@ function lib4ri_datacite_alert_menu() {
         //        'file' => 'lib4ri_datacite_alert.module',
     );
     
+    $items['islandora/datacite/add_package_doi'] = array(
+        'page callback' => 'lib4ri_datacite_alert_add_package_doi',
+        'access arguments' => array('edit datacite entries'),
+        'type' => MENU_CALLBACK,
+        //        'file' => 'lib4ri_datacite_alert.module',
+    );
+    
     return $items;
 }
 
@@ -344,8 +351,11 @@ function lib4ri_datacite_alert_data_packages_management($object){
     $view->display['default']->display_options['filters']['pid_1']['value'] = $object->id;
     $content = $view->execute_display($display_id, NULL);
     
+    
+    
     $build['content'] = array(
         'doi' => lib4ri_datacite_alert_fetch_package_form(),
+//        'doi' => array('#markup' => "<form action=\"$base_url/islandora/datacite/add_package_doi?PID=$object->id\" method=\"post\"><div class=\"form-item form-type-textfield\"><label>Data package DOI </label><input id=\"doi\" type=\"text\" size=\"60\" maxlength=\"192\" class=\"form-text\"></div><input class=\"form-submit\" type=\"submit\" value=\"Add data package\"></form>"),
         'inmods' => array('#markup' => lib4ri_datacite_alert_table_in_mods($object)),
 //        'doi' => array('#markup' => '<br><hr><br><a href="#example">Add to MODS</a><br>'),
 //        'check' => array('#markup' => "<br><hr><br><a href=\"$base_url/islandora/datacite/single_pub?PID=$object->id\">Update Datacite list</a><br><br>"),
@@ -427,6 +437,22 @@ function lib4ri_datacite_alert_fetch_single_pub(){
     drupal_goto($_SERVER['HTTP_REFERER']);
 }
 
+
+function lib4ri_datacite_alert_add_package_doi(){
+    module_load_include('inc', 'lib4ri_datacite_alert', 'includes/classes');
+    $pid = trim($_GET['PID'],'_');
+    
+    $upd = new DataCiteRetrieval();
+    $upd->setPackageDoi($package_doi);
+    $upd->setDoraPid($pid);
+    $upd->fetch()->filter();
+    
+    
+    
+//    $upd->update();
+    
+    
+}
 /********************************************************************************/
 
 function str_lreplace($search, $replace, $subject)

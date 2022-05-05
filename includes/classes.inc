@@ -201,5 +201,11 @@ class DataCiteRetrieval{
     public function getToAdd(){
         return $this->to_add;
     }
+
+    public function setPackageDoi($doi){
+        $this->serv->fetcher->pushQueryElement("doi", $doi);;
+        
+        return $this;
+    }
     
 }
