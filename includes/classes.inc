@@ -12,6 +12,7 @@ class DataCiteRetrieval{
     protected $start_date;
     protected $end_date;
     protected $to_add = [];
+    protected $doraPid = NULL;
         
     /**
      * Constructor
@@ -71,8 +72,23 @@ class DataCiteRetrieval{
         
         return false;
     }
+    
+    public function setDoraPid($pid){
+        $this->doraPid = $pid;
         
+        return $this;
+    }
+    
+    public function doraPidReset(){
+        $this->doraPid = NULL;
+        
+        return $this;
+    }
+    
     private function getDoraPid($doi){
+        if ($this->doraPid){
+            return $this->doraPid;
+        }
         
          $collections = array_map(function($val){return 'RELS_EXT_isMemberOfCollection_uri_ms:info\\:fedora/'.$val;},str_replace(':','\\:',array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections')))));
          $cond = array();
@@ -185,4 +201,5 @@ class DataCiteRetrieval{
     public function getToAdd(){
         return $this->to_add;
     }
+    
 }

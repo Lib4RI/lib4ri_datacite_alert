@@ -409,6 +409,7 @@ function lib4ri_datacite_alert_fetch_single_pub(){
     
     $upd = new DataCiteRetrieval();
     $upd->setDoi($doi);
+    $upd->setDoraPid($pid);
     $upd->fetch()->filter();
     $upd->update();
     
