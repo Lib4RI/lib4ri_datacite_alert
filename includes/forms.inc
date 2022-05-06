@@ -36,7 +36,7 @@
  }
  
  function lib4ri_datacite_alert_set_remarks_form($form, &$form_state){
-//     module_load_include('inc', 'lib4ri_datacite_alert', 'includes/queries');
+     module_load_include('inc', 'lib4ri_datacite_alert', 'includes/queries');
      $form['lib4ri_datacite_alert_remarks'] = array(
          '#type' => 'textarea',
          '#title' => t('Remarks'),
@@ -79,7 +79,7 @@
  }
  
  function lib4ri_datacite_alert_fetch_package_form(){
-     $form['lib4ri_datacite_alert_fetch_package'] = array(
+     $form['lib4ri_datacite_alert_fetch_package_doi'] = array(
          '#type' => 'textfield',
          '#title' => t('Data package DOI'),
          '#required' => FALSE,
@@ -94,21 +94,39 @@
  }
  
  function lib4ri_datacite_alert_fetch_package_form_submit($form, &$form_state){
+     module_load_include('inc', 'lib4ri_datacite_alert', 'includes/classes');
+     
+     $a = explode('/',$_GET['q']);
+     $pid = $a[count($a)-2]; 
+     $doi = $form_state['values']['lib4ri_datacite_alert_fetch_package_doi'];
+     
      $upd = new DataCiteRetrieval();
-     $upd->setDoi($doi);
+     $upd->setPackageDoi($doi);
      $upd->setDoraPid($pid);
-     $upd->fetch()->filter();
-     $upd->update();
+     $upd->fetch();
      
-     $ntoadd = count($upd->getToAdd());
-     if ($ntoadd == 0){
-         $status = 'warning';
+     $found = (count($upd->getData()) > 0);    
+     if (!$found){
+         drupal_set_message("Pacakge $doi not found on Datacite", 'error');
      }
-     else {
-         $status = 'status';
+     else{
+         $upd->filterIgnoreRelated();
+         $toadd = (count($upd->getToAdd()) > 0);
+         if(!$toadd){
+             $discarded =  $upd->getDiscarded()[0]['ids'][0]->id;
+             drupal_set_message("Pacakge $doi already in the alert list for DORA object $pid (ID: $discarded)", 'warning');
+             drupal_goto($_SERVER['HTTP_REFERER']);
+         }
+         $upd->update();
+         $add = $upd->getToAdd();
+         $ids = lib4ri_datacite_alert_get_ids($add['item'], $add['identifier']);
+         if (count($ids) > 1){
+             drupal_set_message("Cannot add package $doi to DORA object $pid MODS", 'error');
+         }
+         lib4ri_datacite_alert_add_data(array('DOI' => $doi, 'ID' => NULL, 'PID' => $pid, 'GOTO' => $_SERVER['HTTP_REFERER']));
+         drupal_set_message("Pacakge $doi added in DORA object $pid", 'status');
      }
-     drupal_set_message("Found $ntoadd new data package(s) for DORA object $pid", $status);
-     
+          
      drupal_goto($_SERVER['HTTP_REFERER']);
      
  }

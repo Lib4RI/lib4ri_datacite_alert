@@ -12,6 +12,7 @@ class DataCiteRetrieval{
     protected $start_date;
     protected $end_date;
     protected $to_add = [];
+    protected $discarded = [];
     protected $doraPid = NULL;
         
     /**
@@ -19,6 +20,9 @@ class DataCiteRetrieval{
      */
     public function __construct() {
         $this->serv = new Lib4riDataCiteDoisServant();
+    }
+    
+    public function setDefQuery(){
         $relation_types = explode(',', trim(variable_get('lib4ri_pub_db_resdata_enrich_relations', 'IsSupplementTo')));
         foreach ($relation_types as $type){
             $this->serv->pushRelationType(trim($type));
@@ -29,16 +33,12 @@ class DataCiteRetrieval{
             $this->serv->pushExcludeRelationType(trim($type));
         }
         
-        //        $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
         $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
         foreach ($publishers as $publisher){
             $this->serv->pushPublisher(trim($publisher->publisher_string));
         }
         
-//         $from = variable_get('lib4ri_datacite_alert_upd_start_date');
-//         $to   = variable_get('lib4ri_datacite_alert_upd_stop_date');
-        
-//        $this->serv->pushQueryElement("updated", '[$from TO $to]');
+        return $this;
     }
     
     public function setStartDate($date){
@@ -53,7 +53,7 @@ class DataCiteRetrieval{
         return $this;
     }
     
-    public function setDataQuery(){
+    public function setDateQuery(){
         $this->serv->pushQueryElement("updated", "[$this->start_date TO $this->end_date]");
         
         return $this;
@@ -65,12 +65,14 @@ class DataCiteRetrieval{
         return $this;
     }
     
-    private function isInList($item, $identifier){
-        if (count(lib4ri_datacite_alert_get_ids($item, $identifier)) > 0){
-            return true;
+    private function isInList($item, $identifier, $any_related = FALSE){
+        $ids = lib4ri_datacite_alert_get_ids($item, $identifier, $any_related);
+
+        if (count($ids) > 0){
+            return $ids;
         }
         
-        return false;
+        return NULL;
     }
     
     public function setDoraPid($pid){
@@ -166,11 +168,15 @@ class DataCiteRetrieval{
     }
     
     public function filter(){
-        foreach ($this->data as $item){            
+        foreach ($this->data as $item){
             foreach ($item['relatedIdentifiers'] as $identifier){                              
-                $identifier['pid'] = $this->getDoraPid($identifier['relatedIdentifier']);
-                if (($identifier['pid'] !== false) && (!$this->isInList($item, $identifier))){
+                $identifier['pid'] = $this->getDoraPid($identifier['relatedIdentifier']); //checks if related identifier is in DORA
+                $ids = $this->isInList($item, $identifier); //checks if it's already in the alert list
+                if (($identifier['pid'] !== false) && ($ids == NULL)){
                     array_push($this->to_add, array('item' => $item, 'identifier' => $identifier));
+                }
+                else{
+                    array_push($this->discarded, array('item' => $item, 'identifier' => $identifier, 'ids' => $ids));
                 }
             }
             
@@ -178,6 +184,19 @@ class DataCiteRetrieval{
         
         return $this;
     }
+        
+    public function filterIgnoreRelated(){
+        foreach ($this->data as $item){
+            $ids = $this->isInList($item, $this->getDoraPid(''), TRUE); //checks if it's already in the alert list
+            if ($ids == NULL){
+                array_push($this->to_add, array('item' => $item, 'identifier' => array('relationType' => '', 'pid' => $this->getDoraPid(''))));
+            }
+            else{
+                array_push($this->discarded, array('item' => $item, 'identifier' => array('relationType' => '', 'pid' => $this->getDoraPid('')), 'ids' => $ids));
+            }
+        }
+    }
+    
     
     public function update(){
         
@@ -202,8 +221,12 @@ class DataCiteRetrieval{
         return $this->to_add;
     }
 
+    public function getDiscarded(){
+        return $this->discarded;
+    }
+    
     public function setPackageDoi($doi){
-        $this->serv->fetcher->pushQueryElement("doi", $doi);;
+        $this->serv->pushQueryElement("doi", strtoupper($doi));
         
         return $this;
     }
