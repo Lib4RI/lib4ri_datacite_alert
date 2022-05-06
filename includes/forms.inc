@@ -119,11 +119,11 @@
          }
          $upd->update();
          $add = $upd->getToAdd();
-         $ids = lib4ri_datacite_alert_get_ids($add['item'], $pid, TRUE);
+         $ids = lib4ri_datacite_alert_get_ids($add[0]['item'], $pid, TRUE);
          if (count($ids) > 1){
              drupal_set_message("Cannot add package $doi to DORA object $pid MODS", 'error');
          }
-         lib4ri_datacite_alert_add_data(array('DOI' => $doi, 'ID' => NULL, 'PID' => $pid, 'GOTO' => $_SERVER['HTTP_REFERER']));
+         lib4ri_datacite_alert_add_data(array('DATADOI' => $doi, 'ID' => $ids[0]->id, 'PID' => $pid, 'GOTO' => $_SERVER['HTTP_REFERER']));
          drupal_set_message("Package $doi added in DORA object $pid", 'status');
      }
           
