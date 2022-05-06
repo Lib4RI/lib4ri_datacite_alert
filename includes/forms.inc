@@ -114,17 +114,17 @@
          $toadd = (count($upd->getToAdd()) > 0);
          if(!$toadd){
              $discarded =  $upd->getDiscarded()[0]['ids'][0]->id;
-             drupal_set_message("Pacakge $doi already in the alert list for DORA object $pid (ID: $discarded)", 'warning');
+             drupal_set_message("Package $doi already in the alert list for DORA object $pid (ID: $discarded)", 'warning');
              drupal_goto($_SERVER['HTTP_REFERER']);
          }
          $upd->update();
          $add = $upd->getToAdd();
-         $ids = lib4ri_datacite_alert_get_ids($add['item'], $add['identifier']);
+         $ids = lib4ri_datacite_alert_get_ids($add['item'], $pid, TRUE);
          if (count($ids) > 1){
              drupal_set_message("Cannot add package $doi to DORA object $pid MODS", 'error');
          }
          lib4ri_datacite_alert_add_data(array('DOI' => $doi, 'ID' => NULL, 'PID' => $pid, 'GOTO' => $_SERVER['HTTP_REFERER']));
-         drupal_set_message("Pacakge $doi added in DORA object $pid", 'status');
+         drupal_set_message("Package $doi added in DORA object $pid", 'status');
      }
           
      drupal_goto($_SERVER['HTTP_REFERER']);
