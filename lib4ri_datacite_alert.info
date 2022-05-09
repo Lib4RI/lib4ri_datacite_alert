@@ -1,3 +1,4 @@
 name = Datacite alert 
 description = ''
 core = 7.x
+stylesheets[all][] = css/lib4ri_datacite_alert.css

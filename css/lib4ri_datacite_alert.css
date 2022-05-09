@@ -1,0 +1,17 @@
+.view-publication-links .views-field, .view-publication-links div.libfourri-research-data, #block-lib4ri-datacite-alert-lib4ri-datacite-alert-res-data .views-field, #block-lib4ri-datacite-alert-lib4ri-datacite-alert-res-data div.libfourri-research-data {
+  padding-left: .75em;
+  padding-bottom: .5em;
+}
+
+.view-publication-links .views-field span, .view-publication-links div.libfourri-research-data span, #block-lib4ri-datacite-alert-lib4ri-datacite-alert-res-data .views-field span, #block-lib4ri-datacite-alert-lib4ri-datacite-alert-res-data div.libfourri-research-data span {
+  background: url('../images/launch-2.png');
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.view-publication-links .views-field span a, .view-publication-links div.libfourri-research-data span a, #block-lib4ri-datacite-alert-lib4ri-datacite-alert-res-data .views-field span a, #block-lib4ri-datacite-alert-lib4ri-datacite-alert-res-data div.libfourri-research-data span a {
+  padding-left: 1.5em;
+}
