@@ -490,7 +490,7 @@ function lib4ri_datacite_alert_block_view($delta = ''){
             $object = menu_get_object('islandora_object', 2);
             if ($object && in_array('ir:citationCModel', $object->models)) {
                 $results = lib4ri_datacite_alert_get_packages_in_mods($object);
-                if ($results && !empty($results)) {
+                if ($results && !empty($results) && ($results->length > 0)) {
                     $block['subject'] = t('Research Data:');
                     $block['content'] = array(
                         'related_research_data' => lib4ri_datacite_alert_get_research_data_block_content($results),
