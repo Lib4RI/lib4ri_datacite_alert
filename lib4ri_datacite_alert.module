@@ -461,3 +461,42 @@ function str_lreplace($search, $replace, $subject)
     
     return $subject;
 }
+
+/********************************************************************************/
+/**
+ * Implements hook_block_info().
+ */
+function lib4ri_datacite_alert_block_info(){
+    $blocks['lib4ri_datacite_alert_res_data'] = array(
+        // The name that will appear in the block list.
+        'info' => t('Research Data'),
+        // Default setting.
+        'cache' => DRUPAL_NO_CACHE,
+        'region' => 'sidebar_second',
+        'status' => 1,
+    );
+    return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function lib4ri_datacite_alert_block_view($delta = ''){
+    $block = [];
+    switch ($delta) {
+        case 'lib4ri_datacite_alert_res_data':
+            module_load_include('inc', 'lib4ri_datacite_alert', 'includes/block');
+            // See if there are results before rendering.
+            $object = menu_get_object('islandora_object', 2);
+            if ($object && in_array('ir:citationCModel', $object->models)) {
+                $results = lib4ri_datacite_alert_get_packages_in_mods($object);
+                if ($results && !empty($results)) {
+                    $block['subject'] = t('Research Data');
+                    $block['content'] = array(
+                        'related_research_data' => lib4ri_datacite_alert_get_research_data_block_content($results),
+                    );
+                }
+            }
+    }
+    return $block;
+}
