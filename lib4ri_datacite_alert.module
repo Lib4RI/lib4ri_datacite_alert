@@ -394,7 +394,7 @@ function lib4ri_datacite_alert_table_in_mods($object){
         return '<br>NO Data Packages in MODS';
     }
     
-    $output = '<table class="views-table"><thead><tr><th>DOI<th>Publisher<th>Publisher label<th>Alternate Identifiers<th></tr></thead><tbody>';
+    $output = '<table class="views-table"><thead><tr><th>DOI<th>Publisher<th>DORA Publisher label<th>Alternate Identifiers<th></tr></thead><tbody>';
         
     $oddeven = array('odd', 'even');
     $count = 0;
