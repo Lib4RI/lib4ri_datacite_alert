@@ -363,13 +363,13 @@ function lib4ri_datacite_alert_data_packages_management($object){
     
     
     $build['content'] = array(
-//        'a' => array('#markup' =>"<form action=\"$base_url/islandora/datacite/add_package_doi?PID=$object->id\" method=\"post\">"),
+        'h0' => array('#markup' =>"<h4>Manually add Data Package</h4>"),
         'doi' => drupal_get_form('lib4ri_datacite_alert_fetch_package_form'),
-//        'doi' => array('#markup' => "<form action=\"$base_url/islandora/datacite/add_package_doi?PID=$object->id\" method=\"post\"><div class=\"form-item form-type-textfield\"><label>Data package DOI </label><input id=\"doi\" type=\"text\" size=\"60\" maxlength=\"192\" class=\"form-text\"></div><input class=\"form-submit\" type=\"submit\" value=\"Add data package\"></form>"),
+        'sep0' => array('#markup' => "<br><hr><br>"),
+        'h1' => array('#markup' =>"<h4>Already in DORA</h4>"),
         'inmods' => array('#markup' => lib4ri_datacite_alert_table_in_mods($object)),
-//        'doi' => array('#markup' => '<br><hr><br><a href="#example">Add to MODS</a><br>'),
-//        'check' => array('#markup' => "<br><hr><br><a href=\"$base_url/islandora/datacite/single_pub?PID=$object->id\">Update Datacite list</a><br><br>"),
-        'sep' => array('#markup' => "<br><hr><br>"),
+        'sep1' => array('#markup' => "<br><hr><br>"),
+        'h2' => array('#markup' =>"<h4>Available in DataCite</h4>"),
         'check' => array('#markup' => "<form action=\"$base_url/islandora/datacite/single_pub?PID=$object->id\" method=\"post\"><input class=\"form-submit\" type=\"submit\" value=\"Update Datacite list\"></form>"),
         'dummy' => array('#markup' => $content),
     );
@@ -394,7 +394,7 @@ function lib4ri_datacite_alert_table_in_mods($object){
         return '<br>NO Data Packages in MODS';
     }
     
-    $output = '<table class="views-table"><thead><tr><th>DOI<th>Publisher<th>DORA Publisher label<th>Alternate Identifiers<th></tr></thead><tbody>';
+    $output = '<table class="views-table"><thead><tr><th>DOI<th>Publisher<th>Publisher label<th>Alternate Identifiers<th></tr></thead><tbody>';
         
     $oddeven = array('odd', 'even');
     $count = 0;
