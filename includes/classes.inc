@@ -189,10 +189,10 @@ class DataCiteRetrieval{
         foreach ($this->data as $item){
             $ids = $this->isInList($item, $this->getDoraPid(''), TRUE); //checks if it's already in the alert list
             if ($ids == NULL){
-                array_push($this->to_add, array('item' => $item, 'identifier' => array('relationType' => '', 'pid' => $this->getDoraPid(''))));
+                array_push($this->to_add, array('item' => $item, 'identifier' => array('relationType' => 'Added manually', 'pid' => $this->getDoraPid(''))));
             }
             else{
-                array_push($this->discarded, array('item' => $item, 'identifier' => array('relationType' => '', 'pid' => $this->getDoraPid('')), 'ids' => $ids));
+                array_push($this->discarded, array('item' => $item, 'identifier' => array('relationType' => 'Added manually', 'pid' => $this->getDoraPid('')), 'ids' => $ids));
             }
         }
     }
