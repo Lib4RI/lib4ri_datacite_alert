@@ -23,7 +23,7 @@ function lib4ri_datacite_alert_get_research_data_block_content($results) {
             '#options' => array(
                 'attributes' => array('target' => '_blank'),
             ),
-            "#prefix" => '<div class="libfourri-research-data"><span>',
+            "#prefix" => '<div title="'.$result->nodeValue.'" class="libfourri-research-data"><span>',
             '#suffix' => '</span></div>',
         );
     }
