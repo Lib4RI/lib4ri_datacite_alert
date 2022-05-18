@@ -170,6 +170,7 @@ function lib4ri_datacite_alert_views_default_views() {
   $handler->display->display_options['fields']['url']['id'] = 'url';
   $handler->display->display_options['fields']['url']['table'] = 'lib4ri_datacite_alert_data';
   $handler->display->display_options['fields']['url']['field'] = 'url';
+  $handler->display->display_options['fields']['url']['exclude'] = TRUE;
   $handler->display->display_options['fields']['url']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['url']['alter']['path'] = '[url]';
   $handler->display->display_options['fields']['url']['alter']['absolute'] = TRUE;
@@ -439,6 +440,7 @@ function lib4ri_datacite_alert_views_default_views() {
     $handler->display->display_options['fields']['url']['id'] = 'url';
     $handler->display->display_options['fields']['url']['table'] = 'lib4ri_datacite_alert_data';
     $handler->display->display_options['fields']['url']['field'] = 'url';
+    $handler->display->display_options['fields']['url']['exclude'] = TRUE;
     $handler->display->display_options['fields']['url']['alter']['make_link'] = TRUE;
     $handler->display->display_options['fields']['url']['alter']['path'] = '[url]';
     $handler->display->display_options['fields']['url']['alter']['absolute'] = TRUE;
@@ -464,7 +466,7 @@ function lib4ri_datacite_alert_views_default_views() {
     $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
     $handler->display->display_options['fields']['nothing_1']['ui_name'] = 'Add to DORA';
     $handler->display->display_options['fields']['nothing_1']['label'] = '';
-    $handler->display->display_options['fields']['nothing_1']['alter']['text'] = 'Add to DORA';
+    $handler->display->display_options['fields']['nothing_1']['alter']['text'] = 'Add to MODS';
     $handler->display->display_options['fields']['nothing_1']['alter']['make_link'] = TRUE;
     $handler->display->display_options['fields']['nothing_1']['alter']['path'] = 'islandora/datacite/add/?PID=[pid]&DATADOI=[datadoi]&ID=[id]';
     $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
@@ -523,7 +525,7 @@ function lib4ri_datacite_alert_views_default_views() {
         t('Data URL'),
         t('Remarks'),
         t('Edit remarks'),
-        t('Add to DORA'),
+        t('Add to MODS'),
         t('Check status'),
         t('Mark as \'Do NOT add\''),
         t('Page'),
