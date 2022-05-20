@@ -25,7 +25,8 @@ function lib4ri_datacite_alert_views_default_views() {
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Datacite alert';
   $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['access']['perm'] = 'access datacite data';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -306,7 +307,8 @@ function lib4ri_datacite_alert_views_default_views() {
     $handler = $view->new_display('default', 'Master', 'default');
     $handler->display->display_options['title'] = 'Datacite alert';
     $handler->display->display_options['use_more_always'] = FALSE;
-    $handler->display->display_options['access']['type'] = 'none';
+    $handler->display->display_options['access']['type'] = 'perm';
+    $handler->display->display_options['access']['perm'] = 'access datacite data';
     $handler->display->display_options['cache']['type'] = 'none';
     $handler->display->display_options['query']['type'] = 'views_query';
     $handler->display->display_options['exposed_form']['type'] = 'basic';
