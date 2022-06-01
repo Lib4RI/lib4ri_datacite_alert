@@ -14,6 +14,12 @@ function lib4ri_datacite_alert_insert_data($item, $identifier){
     
 }
 
+function lib4ri_datacite_alert_delete_data($pid){
+    db_delete(LIB4RI_DATACITE_ALERT_DATA_TABLE)
+    ->condition('pid', $pid)
+    ->execute();
+}
+
 function lib4ri_datacite_alert_get_ids($item, $identifier, $any_related = FALSE){
     $q = db_select(LIB4RI_DATACITE_ALERT_DATA_TABLE,'f');
     $q->fields('f', array('id'))

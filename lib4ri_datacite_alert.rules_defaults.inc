@@ -22,6 +22,18 @@ function lib4ri_datacite_alert_default_rules_configuration() {
   }
 }';
     
+    $exported_rules['rules_deletedatacite_packages'] ='{ "rules_deletedatacite_packages" : {
+    "LABEL" : "DeleteDatacite packages",
+    "PLUGIN" : "reaction rule",
+    "OWNER" : "rules",
+    "REQUIRES" : [ "rules", "lib4ri_datacite_alert", "islandora" ],
+    "ON" : { "islandora_object_purged" : [] },
+    "DO" : [
+      { "lib4ri_datacite_alert_delete_packages" : { "object" : "[object:value]" } }
+    ]
+  }
+}'; 
+    
     foreach ($exported_rules as $exported_rule) {
         $rule = rules_import($exported_rule);
         $configs[$rule->name] = $rule;
