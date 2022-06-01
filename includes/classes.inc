@@ -14,6 +14,7 @@ class DataCiteRetrieval{
     protected $to_add = [];
     protected $discarded = [];
     protected $doraPid = NULL;
+    protected $doi = NULL;
         
     /**
      * Constructor
@@ -184,7 +185,24 @@ class DataCiteRetrieval{
         
         return $this;
     }
+    
+    public function filterSingleDoi(){
+        foreach ($this->data as $item){
+            foreach ($item['relatedIdentifiers'] as $identifier){
+                $ids = $this->isInList($item, $identifier); //checks if it's already in the alert list
+                if((strtolower($identifier['relatedIdentifier']) == $this->doi) && ($ids == NULL)){
+                    $identifier['pid'] = $this->doraPid;
+                    array_push($this->to_add, array('item' => $item, 'identifier' => $identifier));
+                }
+                else{
+                    array_push($this->discarded, array('item' => $item, 'identifier' => $identifier, 'ids' => $ids));
+                }
+            }
+        }
         
+        return $this;
+    }
+    
     public function filterIgnoreRelated(){
         foreach ($this->data as $item){
             $ids = $this->isInList($item, $this->getDoraPid(''), TRUE); //checks if it's already in the alert list
@@ -208,6 +226,7 @@ class DataCiteRetrieval{
     }
     
     public function setDoi($doi){
+        $this->doi = $doi;
         $this->serv->setDoi($doi);
         
         return $this;
