@@ -107,7 +107,7 @@
      
      $found = (count($upd->getData()) > 0);    
      if (!$found){
-         drupal_set_message("Pacakge $doi not found on Datacite", 'error');
+         drupal_set_message("Package $doi not found on Datacite", 'error');
      }
      else{
          $upd->filterIgnoreRelated();
