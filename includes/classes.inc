@@ -19,8 +19,13 @@ class DataCiteRetrieval{
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct($filter = true) {
+        if ($filter){
         $this->serv = new Lib4riDataCiteDoisServant();
+        }
+        else{
+            $this->serv = new DataCiteDoisServant();
+        }
     }
     
     public function setDefQuery(){

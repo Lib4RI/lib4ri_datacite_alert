@@ -100,7 +100,7 @@
      $pid = $a[count($a)-2]; 
      $doi = $form_state['values']['lib4ri_datacite_alert_fetch_package_doi'];
      
-     $upd = new DataCiteRetrieval();
+     $upd = new DataCiteRetrieval(false);
      $upd->setPackageDoi($doi);
      $upd->setDoraPid($pid);
      $upd->fetch();
