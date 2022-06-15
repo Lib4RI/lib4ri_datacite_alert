@@ -14,8 +14,11 @@ function lib4ri_datacite_alert_default_rules_configuration() {
     "LABEL" : "Fetch Datacite packages",
     "PLUGIN" : "reaction rule",
     "OWNER" : "rules",
-    "REQUIRES" : [ "lib4ri_datacite_alert", "islandora" ],
+    "REQUIRES" : [ "rules", "lib4ri_datacite_alert", "islandora" ],
     "ON" : { "islandora_object_ingested" : [] },
+    "IF" : [
+      { "list_contains" : { "list" : [ "object:models" ], "item" : "ir:citationCModel" } }
+    ],
     "DO" : [
       { "lib4ri_datacite_alert_fetch_packages" : { "object" : [ "object" ] } }
     ]
