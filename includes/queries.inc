@@ -30,7 +30,7 @@ function lib4ri_datacite_alert_get_ids($item, $identifier, $any_related = FALSE)
     }
     else{
         $q->condition('doi', $identifier['relatedIdentifier'], '=');
-        $q->condition('relation', $identifier['relationType'], '=');
+//        $q->condition('relation', $identifier['relationType'], '=');
     }   
     $res = $q->execute();
     
