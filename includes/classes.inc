@@ -177,7 +177,8 @@ class DataCiteRetrieval{
         foreach ($this->data as $item){
             foreach ($item['relatedIdentifiers'] as $identifier){                              
                 $identifier['pid'] = $this->getDoraPid($identifier['relatedIdentifier']); //checks if related identifier is in DORA
-                $ids = $this->isInList($item, $identifier); //checks if it's already in the alert list
+//                $ids = $this->isInList($item, $identifier); //checks if it's already in the alert list
+                $ids = $this->isInList($item, $identifier['pid'], TRUE); //checks if it's already in the alert list
                 if (($identifier['pid'] !== false) && ($ids == NULL)){
                     array_push($this->to_add, array('item' => $item, 'identifier' => $identifier));
                 }
@@ -194,7 +195,8 @@ class DataCiteRetrieval{
     public function filterSingleDoi(){
         foreach ($this->data as $item){
             foreach ($item['relatedIdentifiers'] as $identifier){
-                $ids = $this->isInList($item, $identifier); //checks if it's already in the alert list
+//                $ids = $this->isInList($item, $identifier); //checks if it's already in the alert list
+                $ids = $this->isInList($item, $this->doraPid, TRUE); //checks if it's already in the alert list
                 if((strtolower($identifier['relatedIdentifier']) == $this->doi) && ($ids == NULL)){
                     $identifier['pid'] = $this->doraPid;
                     array_push($this->to_add, array('item' => $item, 'identifier' => $identifier));
