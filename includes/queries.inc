@@ -14,9 +14,9 @@ function lib4ri_datacite_alert_insert_data($item, $identifier){
     
 }
 
-function lib4ri_datacite_alert_delete_data($pid){
+function lib4ri_datacite_alert_delete_data($id){
     db_delete(LIB4RI_DATACITE_ALERT_DATA_TABLE)
-    ->condition('pid', $pid)
+    ->condition('id', $id)
     ->execute();
 }
 

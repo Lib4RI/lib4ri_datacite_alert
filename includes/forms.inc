@@ -131,3 +131,32 @@
      
  }
  
+ function lib4ri_datacite_alert_del_from_table_form(){
+    
+     $form['lib4ri_datacite_alert_del_from_table_warning'] = array(
+         '#type' => 'item',
+         '#markup' => t('Do you really want to delete this item from the alert table? (The action is unduable)'),
+     );
+     
+     
+     $form['lib4ri_datacite_alert_del_from_table_submit'] = array(
+         '#type' => 'submit',
+         '#value' => 'Add data package',
+     );
+     
+     
+ }
+ 
+ function lib4ri_datacite_alert_form_lib4ri_datacite_alert_del_from_table_form_alter(&$form, &$form_state) {
+     $id = trim($_GET['id'],'_');
+     
+     $form['lib4ri_datacite_alert_del_from_table_warning']['#markup'] = t("Do you really want to delete the item $id from the alert table? (The action is unduable)");;
+     $form['referer']['#default_value'] = $_SERVER['HTTP_REFERER'];
+     
+     return $form;
+     
+ }
+ 
+ function lib4ri_datacite_alert_del_from_table_form_submit(){
+     
+ }
