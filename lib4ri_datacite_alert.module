@@ -81,7 +81,7 @@ function lib4ri_datacite_alert_menu() {
     $items['islandora/datacite/deldb'] = array(
         'page callback' => 'drupal_get_form',
         'page arguments' => array('lib4ri_datacite_alert_del_from_table_form'),
-        'access arguments' => array('edit datacite entries'),
+        'access arguments' => array('administer datacite'),
         'type' => MENU_CALLBACK,
         'file' => 'includes/forms.inc',
     );
