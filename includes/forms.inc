@@ -89,7 +89,7 @@
          '#type' => 'submit',
          '#value' => 'Add data package',
      );
-     
+    
      return $form;
  }
  
@@ -131,32 +131,44 @@
      
  }
  
- function lib4ri_datacite_alert_del_from_table_form(){
+ function lib4ri_datacite_alert_del_from_table_form($form, &$form_state){
     
      $form['lib4ri_datacite_alert_del_from_table_warning'] = array(
          '#type' => 'item',
-         '#markup' => t('Do you really want to delete this item from the alert table? (The action is unduable)'),
+         '#markup' => t('<div>Do you really want to delete this item from the alert table? (The action is unduable)</div>'),
      );
      
      
-     $form['lib4ri_datacite_alert_del_from_table_submit'] = array(
+     $form['submit'] = array(
          '#type' => 'submit',
-         '#value' => 'Add data package',
+         '#value' => 'Delete package',
      );
      
      
+     $form['referer'] = array(
+         '#type' => 'hidden',
+     );
+     
+     return $form;
  }
  
  function lib4ri_datacite_alert_form_lib4ri_datacite_alert_del_from_table_form_alter(&$form, &$form_state) {
+     module_load_include('inc', 'lib4ri_datacite_alert', 'includes/queries');
      $id = trim($_GET['id'],'_');
+     $doi = lib4ri_datacite_alert_get_doi($id);
+     $form['lib4ri_datacite_alert_del_from_table_warning']['#markup'] = t("<div>Do you really want to delete the package $doi ($id) from the alert table? (The action is unduable)</div>");
      
-     $form['lib4ri_datacite_alert_del_from_table_warning']['#markup'] = t("Do you really want to delete the item $id from the alert table? (The action is unduable)");;
      $form['referer']['#default_value'] = $_SERVER['HTTP_REFERER'];
      
      return $form;
      
  }
  
- function lib4ri_datacite_alert_del_from_table_form_submit(){
-     
+ function lib4ri_datacite_alert_del_from_table_form_submit($form, &$form_state){
+     module_load_include('inc', 'lib4ri_datacite_alert', 'includes/queries');
+     $id = trim($_GET['id'],'_');
+     $doi = lib4ri_datacite_alert_get_doi($id);
+     lib4ri_datacite_alert_delete_data($id);
+     drupal_set_message("Package $doi ($id) has been removed from the alert list", 'status');
+     drupal_goto($form_state['values']['referer']);
  }

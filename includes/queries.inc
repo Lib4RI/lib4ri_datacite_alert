@@ -64,6 +64,19 @@ function lib4ri_datacite_alert_get_remarks($id){
     
 }
 
+function lib4ri_datacite_alert_get_doi($id){
+    $res = db_select(LIB4RI_DATACITE_ALERT_DATA_TABLE,'f')
+    ->fields('f', array('doi'))
+    ->condition('id', $id, '=')
+    ->execute();
+    
+    $dois = [];
+    foreach ($res as $doi) {
+        array_push($dois, $doi);
+    }
+    return $dois[0]->doi;
+    
+}
 function lib4ri_datacite_alert_get_publisher_label($publisher){
     $res = db_select(LIB4RI_DATACITE_ALERT_PUBLISHERS_TABLE,'f')
     ->fields('f', array('label'))
