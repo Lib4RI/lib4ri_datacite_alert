@@ -228,9 +228,10 @@ function lib4ri_datacite_alert_del_data(){
     $dataDois = lib4ri_datacite_alert_get_packages_in_mods($object);
     
     foreach ($dataDois as $doi){
+        $document = $doi->ownerDocument;
         if (strtolower($doi->nodeValue) == strtolower($datadoi)){
-            $doi->parentNode->removeChild($doi);
-            $object['MODS']->content = $doi->ownerDocument->saveXML();
+            $doi->parentNode->parentNode->removeChild($doi->parentNode);
+            $object['MODS']->content = $document->saveXML();
             break;
         }
     }
